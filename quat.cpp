@@ -190,7 +190,10 @@ slerp(Quaternion q1, Quaternion q2, double t)
 		return result;
 	}
 	double theta = t * acos(cos_theta0);
-	return (sin(theta*(1.0-t))*q1 + sin(theta*t)*q2) / sin(theta);
+	//return (sin(theta*(1.0-t))*q1 + sin(theta*t)*q2) / sin(theta);
+	Quaternion ortho = q2 - cos_theta0*q1;
+	ortho = normalize(ortho);
+	return cos(theta)*q1 + sin(theta)*ortho;
 }
 
 constexpr int screen_w = 1200, screen_h = 800;
@@ -299,7 +302,7 @@ main(int argc, char **argv)
 		float axisx = strtof(argv[2], NULL);
 		float axisy = strtof(argv[3], NULL);
 		float axisz = strtof(argv[4], NULL);
-		q2 = normalize(rotate_quat(q1, angle, {axisx, axisy, axisz}));
+		q2 = rotate_quat(q1, angle, {axisx, axisy, axisz});
 		last = q1;
 	}
 	double t = 0.0001;
